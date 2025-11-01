@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+
+# Environment variables
+.env
+
+# Service accounts and credentials
+service_account.json
+
+# Upload folders and generated files
+uploads/
+
+# System files
+.DS_Store
+Thumbs.db
