@@ -12,6 +12,9 @@ load_dotenv()
 
 app = FastAPI(title="Food OCR Translator", version="1.0")
 
+MODEL_PATH = os.getenv("MODEL_PATH", "./models/fine_tuned_model")
+classifier = ProductClassifier(MODEL_PATH)
+
 @app.get("/")
 def home():
     return {"message": "Food OCR Translator API is running. Go to /docs to upload an image."}
@@ -38,21 +41,19 @@ async def process_ingredients(file: UploadFile = File(...)):
         ingredients = parse_ingredients(english_text)
         allergens = detect_allergens(english_text)
 
-        # ✅ Step 4: Save minimal clean output for AI model
+        # Step 4.3: Save minimal clean output for AI model
         save_path = temp_path.rsplit(".", 1)[0] + "_data.json"
         data = {
             "ingredients": ingredients,
             "allergens": allergens
         }
 
-        # Step 4: Classify dietary compatibility
+        # Step 4.7: Classify dietary compatibility
         classification_result = classifier.process_ingredients(ingredients, allergens)
 
         # Step 5: Save complete output
         save_path = temp_path.rsplit(".", 1)[0] + "_data.json"
         data = {
-            "raw_korean": korean_text,
-            "translated_english": english_text,
             "ingredients": classification_result["ingredients"],
             "allergens": classification_result["allergens"],
             "product_classification": classification_result["product_classification"],

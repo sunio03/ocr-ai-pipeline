@@ -20,3 +20,6 @@ models/
 # System files
 .DS_Store
 Thumbs.db
+
+#Dockerfile
+Dockerfile
