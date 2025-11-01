@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from utils.ocr import extract_korean_text
 from utils.translate import translate_to_english
 from utils.parser import parse_ingredients, detect_allergens
+from utils.classifier import ProductClassifier
 
 load_dotenv()
 
@@ -42,6 +43,20 @@ async def process_ingredients(file: UploadFile = File(...)):
         data = {
             "ingredients": ingredients,
             "allergens": allergens
+        }
+
+        # Step 4: Classify dietary compatibility
+        classification_result = classifier.process_ingredients(ingredients, allergens)
+
+        # Step 5: Save complete output
+        save_path = temp_path.rsplit(".", 1)[0] + "_data.json"
+        data = {
+            "raw_korean": korean_text,
+            "translated_english": english_text,
+            "ingredients": classification_result["ingredients"],
+            "allergens": classification_result["allergens"],
+            "product_classification": classification_result["product_classification"],
+            "friendly_summary": classification_result["friendly_summary"]
         }
 
         with open(save_path, "w", encoding="utf-8") as jf:

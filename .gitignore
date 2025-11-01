@@ -14,6 +14,9 @@ service_account.json
 # Upload folders and generated files
 uploads/
 
+# AI Models (large files)
+models/
+
 # System files
 .DS_Store
 Thumbs.db
